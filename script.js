@@ -4,7 +4,7 @@
 const output = document.getElementById("output");
 const container = document.getElementById("container");
 const bars = [];
-const mult = 5;
+const anima = 0;
 
 
 
@@ -22,40 +22,33 @@ function renderBars(arr, n){
 	}
 }
 
-function swapNodes(n1, n2) {
+ function swapNodes(nodeA, nodeB) {
+    const parentA = nodeA.parentNode;
+    const siblingA = nodeA.nextSibling === nodeB ? nodeA : nodeA.nextSibling;
+	
+    // Move `nodeA` to before the `nodeB`
+    nodeB.parentNode.insertBefore(nodeA, nodeB);
 
-    var p1 = n1.parentNode;
-    var p2 = n2.parentNode;
-    var i1, i2;
-
-    if ( !p1 || !p2 || p1.isEqualNode(n2) || p2.isEqualNode(n1) ) return;
-
-    for (var i = 0; i < p1.children.length; i++) {
-        if (p1.children[i].isEqualNode(n1)) {
-            i1 = i;
-        }
-    }
-    for (var i = 0; i < p2.children.length; i++) {
-        if (p2.children[i].isEqualNode(n2)) {
-            i2 = i;
-        }
-    }
-
-    if ( p1.isEqualNode(p2) && i1 < i2 ) {
-        i2++;
-    }
-    p1.insertBefore(n2, p1.children[i1]);
-    p2.insertBefore(n1, p2.children[i2]);
-}
+    // Move `nodeB` to before the sibling of `nodeA`
+    parentA.insertBefore(nodeB, siblingA);
+};
 
 // A utility function to swap two elements
 function swap(arr, i, j) {
 	let bar1 = bars[i];
 	let bar2 = bars[j];
 	let temp = arr[i];
+	
 	arr[i] = arr[j];
 	arr[j] = temp;
+	
+	let tempB = bars[i];
+
+	bars[i] = bars[j];
+	bars[j] = tempB;
+	
 	swapNodes(bar1,bar2)
+
 }
 
 /* This function takes last element as pivot, places
@@ -103,8 +96,9 @@ function quickSort(arr, low, high) {
 
 		// Separately sort elements before
 		// partition and after partition
-		quickSort(arr, low, pi - 1);
-		quickSort(arr, pi + 1, high);
+	
+		quickSort(arr, low, pi - 1)
+		quickSort(arr, pi + 1, high)
 	}
 }
 
@@ -112,8 +106,8 @@ function quickSort(arr, low, high) {
 function printArray(arr, size) {
 	for (let i = 0; i < size; i++){
 
-		/*output.innerHTML += arr[i] + " ";
-		output.innerHTML += "<br>";*/
+		output.innerHTML += arr[i] + " ";
+		output.innerHTML += "<br>";
 	}
 
 		
@@ -121,14 +115,15 @@ function printArray(arr, size) {
 
 // Driver Code
 
-let arr = [4,3,2,5,6,7];
+let arr = [3,9,6,7,8,9,2,3,5];
 
 let n = arr.length;
 
 
 
 renderBars(arr, n);
-quickSort(arr, 0, n - 1);
+quickSort(arr, 0, n - 1)
+//setInterval("quickSort(arr, 0, n - 1)", anima);
 //output.innerHTML  += "Sorted array: <br>";
 printArray(arr, n);
 
